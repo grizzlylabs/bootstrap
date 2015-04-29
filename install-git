@@ -1,0 +1,142 @@
+#!/bin/bash
+#
+######################
+#
+# Script to bootstrap configuration management
+#
+# This script installs and configures GIT on centos 7
+#
+#
+# run it sudo
+#
+######################
+#
+# Here are the variable you may change
+
+USER_NAME='grizzly'
+USER_EMAIL="grizzly@grizzlylabs.com"
+
+THIS_REPOSITORY="git@github.com:grizzlylabs/bootstrap.git"
+
+LOCAL_FOLDER="/home/$USER/GIT/bootstrap"
+
+######################
+
+clear
+
+printf "### Update system and add EPEL Repository###\n"
+printf "\n"
+
+sudo yum install epel-release -y
+sudo yum update -y
+
+printf "\n"
+
+read -p "### Press [Enter] key to continue ###"
+clear
+
+printf "### Running install-git ###\n"
+printf "\n"
+
+sudo yum install git -y
+
+printf "\n"
+
+git --version
+
+printf "\n"
+
+read -p "### Press [Enter] key to continue ###"
+clear
+
+
+######### Change your name and email address
+
+printf "\n"
+printf "### Set up user ###\n"
+printf "\n"
+
+git config --global user.name $USER_NAME 
+git config --global user.email $USER_EMAIL 
+
+printf "\n"
+
+git config --list
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
+printf "\n"
+
+######### Set up SSH for github
+
+printf "Two factor authentication access to Git Hub is hightly recommended!\n"
+printf "\n"
+printf "If you use 2 factor then you need to do this once on each system\n"
+printf "\n"
+printf "Do NOT do it twice\n"
+printf "\n"
+
+   printf "Do you need new SSH keys to access GitHub? Capital (Y or N)" 
+
+   read answer
+
+   if [ "$answer" == 'Y' ] 
+   then
+        printf "open a web browser on the system\n"
+        printf "logon to your GitHub account\n"
+        printf "Make sure you have two factor authentication turned on\n"
+        printf "prepare to add a SSH key to your account\n"
+
+        printf "\n"
+        read -p "### Press [Enter] key to continue ###"
+        clear
+        printf "\n"
+
+        printf "* When it says Enter a file name.... just hit enter\n"
+        printf "* When it says Enter a pashrhrase put in a good one\n"        
+        printf "* Do I have to say it? If you lose that key it's a pain to fix\n"
+        printf "* AND people will laugh at you!\n"
+        printf "\n"
+
+        #create key
+           ssh-keygen -t rsa -C "$USER_EMAIL"
+        #add the key to ssh-agent
+           ssh-add ~/.ssh/id_rsa
+        #install xsel
+           sudo yum install xsel -y
+
+        printf "\n"
+        read -p "### Press [Enter] key to continue ###"
+        clear
+        printf "\n"
+        printf "### Your public key is about to be copied into your clipboard ###\n"
+        printf "\n"
+        printf "When you see it ...\n"
+        printf "paste the key into the GitHub add SSH key dialog in your web browser\n"
+
+        xsel < ~/.ssh/id_rsa.pub 
+        ssh -T git@github.com
+   fi  
+
+printf "\n"
+read -p "Press [Enter] key to continue"
+clear
+printf "\n"
+
+######### Github Clone Repository
+
+printf "### Clone the Grizzlylabs bootstrap github project in your home directory ###"
+printf "\n"
+
+`mkdir -p /home/$USER/GIT/bootstrap`
+
+printf "\n"
+printf "command is: git clone $THIS_REPOSITORY $LOCAL_FOLDER\n" 
+printf "\n"
+git clone "$THIS_REPOSITORY" "$LOCAL_FOLDER" 
+printf "\n"
+
+read -p "### Press [Enter] key to continue ###"
+clear
+printf "\n"
