@@ -13,12 +13,18 @@ High level Process is:
 Files
      README
      BareMetalStandard.docx
-     install.git
+     install-git
+     install-puppet
 
 Process
      README this document
      Read  BareMetalStandard.docx
      Install CentOS 7 to standard
-     Put a copy of install-git into /usr/local/bin on your new server
-     Edit the variable on the top of install-get
-     Execute install-get as your user rather than root
+     install-git
+        Put a copy of install-git into /usr/local/bin on your new server
+        Edit the variable on the top of install-get
+        Execute install-get as your user rather than root
+     install-puppet
+        Put a copy of install-puppet into /usr/local/bin on your server
+        Edit the variable on the top of install-puppet
+        Execute install-puppet as your user rather than root

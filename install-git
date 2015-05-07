@@ -6,9 +6,6 @@
 #
 # This script installs and configures GIT on centos 7
 #
-#
-# run it sudo
-#
 ######################
 #
 # Here are the variable you may change

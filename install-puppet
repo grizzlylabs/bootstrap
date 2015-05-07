@@ -1,0 +1,103 @@
+#!/bin/bash
+#
+######################
+#
+# install-puppet
+#
+# Script to bootstrap configuration management
+#
+# This script installs and configures puppet on centos 7
+#
+# don't run as root or sudo
+#
+######################
+#
+# Here are the variable you may change
+
+
+PUPPET_FOLDER="/var/local/puppet"
+PUPPET_GID='2000'
+
+MY_HOSTNAME="deploy01"
+MY_DOMAIN="grizzlylabs.org"
+MY_FQDN="$MY_HOSTNAME.$MY_DOMAIN"
+MY_IP="192.168.2.5"
+
+######################
+
+printf "\n"
+printf "########## Set up local puppet storage ################\n"
+printf "\n"
+printf "Ensure a puppet group is available\n"
+printf "\n"
+printf "If this script actually creates the group then you will need to\n"
+printf "log off and back in after you run this script\n"
+printf "\n"
+
+sudo groupadd -g "$PUPPET_GID" puppet
+sudo usermod -a -G puppet "$USER"
+
+printf "\n"
+printf "Create the local directories\n"
+printf "\n"
+sudo mkdir -p "$PUPPET_FOLDER"
+sudo mkdir -p "$PUPPET_FOLDER/manifests"
+sudo mkdir -p "$PUPPET_FOLDER/modules"
+sudo chown -R root:puppet "$PUPPET_FOLDER" 
+sudo chmod -R 770 "$PUPPET_FOLDER" 
+
+printf "\n"
+read -p "Press [Enter] key to continue"
+clear
+
+######################
+#
+printf "\n"
+printf "################ Configure Time Services  ##############\n"
+printf "\n"
+printf "Configuration needs good timekeeping...Using chrony\n"
+
+sudo systemctl enable chronyd 
+sudo systemctl start chronyd 
+
+printf "\n"
+read -p "Press [Enter] key to continue"
+clear
+
+######################
+#
+printf "\n"
+printf "################ Ensure nslookups working ###############\n"
+printf "\n"
+printf "Check the hostname command\n"
+printf "\n"
+
+HOSTNAME=`hostname`
+if [ "$HOSTNAME" != "$MY_FQDN" ]
+then
+     
+     printf "Fixing hostname\n"
+     printf "\n"
+     sudo hostnamectl --static set-hostname "$MY_FQDN"
+     printf "\n"
+fi
+
+if [ -n "$( grep "$HOSTNAME" /etc/hosts )" ]
+then
+     sudo sed -i "s/$HOSTNAME/$MY_FQDN/g" /etc/hosts
+
+elif [ -n "$( grep "$MY_FQDN" /etc/hosts )"]
+then
+     HOSTS_LINE="$MY_IP" 
+     HOSTS_LINE=""$HOSTS_LINE" "$MY_FQDN"" 
+     HOSTS_LINE=""$HOSTS_LINE" "$MY_HOSTNAME""
+     printf "$HOSTS_LINE\n"
+     printf "\n"
+     sudo echo -e $HOSTS_LINE | sudo tee --append /etc/hosts > /dev/null
+
+     #echo -e "$( hostname -I | awk '{ print $1 }' )\t$MY_FQDN" >> /tmp/hosts
+fi
+
+printf "\n"
+read -p "Press [Enter] key to continue"
+clear
