@@ -12,16 +12,10 @@
 #
 ######################
 #
-# Here are the variable you may change
+# variables are stored in bootstrap.cfg
+# review those settings before running this script
 
-
-PUPPET_FOLDER="/var/local/puppet"
-PUPPET_GID='2000'
-
-MY_HOSTNAME="deploy01"
-MY_DOMAIN="grizzlylabs.org"
-MY_FQDN="$MY_HOSTNAME.$MY_DOMAIN"
-MY_IP="192.168.2.5"
+source ./bootstrap.cfg 
 
 ######################
 
@@ -98,6 +92,24 @@ then
      #echo -e "$( hostname -I | awk '{ print $1 }' )\t$MY_FQDN" >> /tmp/hosts
 fi
 
+printf "\n"
+read -p "Press [Enter] key to continue"
+clear
+
+######################
+#
+printf "\n"
+printf "################## Install Puppet ####################\n"
+printf "\n"
+
+sudo rpm -ivh $PUPPET_REPO
+sudo yum update -y
+
+sudo yum install puppet -y
+
+printf "\n"
+printf " Running a version command you should not see errors\n"
+puppet --version
 printf "\n"
 read -p "Press [Enter] key to continue"
 clear

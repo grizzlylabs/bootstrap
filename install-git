@@ -10,12 +10,7 @@
 #
 # Here are the variable you may change
 
-USER_NAME='grizzly'
-USER_EMAIL="grizzly@grizzlylabs.com"
-
-THIS_REPOSITORY="git@github.com:grizzlylabs/bootstrap.git"
-
-LOCAL_FOLDER="/home/$USER/GIT/bootstrap"
+source ./bootstrap.cfg
 
 ######################
 
