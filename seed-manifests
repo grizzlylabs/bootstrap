@@ -1,0 +1,54 @@
+#!/bin/bash
+############## seed.manifests
+#
+clear
+printf "\n"
+printf "This script creates the puppet manifest files\n"
+printf "             1. to manage this deployment box\n"
+printf "             2. To rebuild this box or create another\n"
+printf "             3. To provide a framework for your entire deployment\n" 
+printf "\n"
+printf "\n"
+
+read -p "### Press [Enter] key to continue ###"
+clear
+
+#
+#############
+#
+# Get any variables
+#
+# Inspect bootstrap.cfg before you execute this script
+#
+source ./bootstrap.cfg
+#
+#############
+#
+printf "\n" 
+printf "copy (if exist) or create site.pp\n"
+printf "\n" 
+
+if [ -e ""$LOCAL_FOLDER"/site.pp" ]
+then
+   printf "File exists but not in puppet. Copying to puppet\n"
+   printf "\n"
+   cp ./site.pp $PUPPET_FOLDER/manifests/site.pp
+   chown :puppet $PUPPET_FOLDER/manifests/site.pp
+else
+   printf "File does not exist. Creating and installing file\n"
+   printf "\n"
+   echo 'import 'nodes.pp'' > ./site.pp
+   cp ./site.pp $PUPPET_FOLDER/manifests/site.pp
+   chown :puppet $PUPPET_FOLDER/manifests/site.pp
+fi
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
+
+#############
+#
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
