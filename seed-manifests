@@ -28,17 +28,17 @@ printf "\n"
 printf "copy (if exist) or create site.pp\n"
 printf "\n" 
 
-if [ -e ""$LOCAL_FOLDER"/site.pp" ]
+if [ -e ""$LOCAL_FOLDER"/puppet/site.pp" ]
 then
    printf "File exists but not in puppet. Copying to puppet\n"
    printf "\n"
-   cp ./site.pp $PUPPET_FOLDER/manifests/site.pp
+   cp $LOCAL_FOLDER/puppet/site.pp $PUPPET_FOLDER/manifests/site.pp
    chown :puppet $PUPPET_FOLDER/manifests/site.pp
 else
    printf "File does not exist. Creating and installing file\n"
    printf "\n"
-   echo 'import 'nodes.pp'' > ./site.pp
-   cp ./site.pp $PUPPET_FOLDER/manifests/site.pp
+   echo 'import 'nodes.pp'' > $LOCAL_FOLDER/puppet/site.pp
+   cp $LOCAL_FOLDER/puppet/site.pp $PUPPET_FOLDER/manifests/site.pp
    chown :puppet $PUPPET_FOLDER/manifests/site.pp
 fi
 

@@ -16,6 +16,7 @@ Files
      bootstrap.cfg
      install-git
      install-puppet
+     seed-manifests
 
 Process
      README this document
@@ -27,5 +28,16 @@ Process
         Put a copy of install-git into /usr/local/bin on your new server
         Execute install-get as your user rather than root
      install-puppet
-        Put a copy of install-puppet into /usr/local/bin on your server
         Execute install-puppet as your user rather than root
+     seed-manifiests
+        Execute seed-manifests as your user rather than root
+
+References
+
+Puppet 3 Beginners Guide
+   John Arundel 2013 Packt Publishing 
+   ISBN: 978-1-78216-124-0
+
+Pro Git Second Edition
+   Scott Chacon and Ben Straub 2014 Apess
+   ISBN: 978-1-4842-0077-3
