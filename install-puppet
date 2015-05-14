@@ -33,12 +33,34 @@ sudo usermod -a -G puppet "$USER"
 
 printf "\n"
 printf "Create the local directories\n"
+printf " The root is "$PUPPET_ROOT"\n"
 printf "\n"
-sudo mkdir -p "$PUPPET_FOLDER"
-sudo mkdir -p "$PUPPET_FOLDER/manifests"
-sudo mkdir -p "$PUPPET_FOLDER/modules"
-sudo chown -R root:puppet "$PUPPET_FOLDER" 
-sudo chmod -R 770 "$PUPPET_FOLDER" 
+
+if [ ! -d "$PUPPET_ROOT" ]
+then
+   #make the directories
+   sudo mkdir -p "$PUPPET_ROOT"
+
+   sudo mkdir -p ""$PUPPET_ROOT"/environments"
+
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/production"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/test"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/development"
+
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/production/manifests"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/production/modules"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/development/manifests"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/development/modules"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/test/manifests"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/test/modules"
+
+   sudo chown -R root:puppet "$PUPPET_ROOT" 
+
+   sudo chmod -R 770 "$PUPPET_ROOT" 
+   sudo chmod -R g+s "$PUPPET_ROOT"
+
+   sudo ln -s "$PUPPET_ROOT" /etc
+fi
 
 printf "\n"
 read -p "Press [Enter] key to continue"
@@ -88,8 +110,6 @@ then
      printf "$HOSTS_LINE\n"
      printf "\n"
      sudo echo -e $HOSTS_LINE | sudo tee --append /etc/hosts > /dev/null
-
-     #echo -e "$( hostname -I | awk '{ print $1 }' )\t$MY_FQDN" >> /tmp/hosts
 fi
 
 printf "\n"
@@ -113,3 +133,5 @@ puppet --version
 printf "\n"
 read -p "Press [Enter] key to continue"
 clear
+
+#######  EOF  #################################################

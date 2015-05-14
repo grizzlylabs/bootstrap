@@ -32,14 +32,12 @@ if [ -e ""$LOCAL_FOLDER"/puppet/manifests/site.pp" ]
 then
    printf "File exists but not in puppet. Copying to puppet\n"
    printf "\n"
-   cp $LOCAL_FOLDER/puppet/manifests/site.pp $PUPPET_FOLDER/manifests/site.pp
-   chown :puppet $PUPPET_FOLDER/manifests/site.pp
+   cp $LOCAL_FOLDER/puppet/manifests/site.pp "$MANIFEST_DIR"
 else
    printf "File does not exist. Creating and installing file\n"
    printf "\n"
-   echo 'import 'nodes.pp'' > $LOCAL_FOLDER/puppet/manifests/site.pp
-   cp $LOCAL_FOLDER/puppet/manifests/site.pp $PUPPET_FOLDER/manifests/site.pp
-   chown :puppet $PUPPET_FOLDER/manifests/site.pp
+   printf "import \'nodes.pp\'\n" > $LOCAL_FOLDER/puppet/manifests/site.pp
+   cp $LOCAL_FOLDER/puppet/manifests/site.pp "$MANIFEST_DIR"
 fi
 
 printf "\n"
@@ -50,9 +48,58 @@ clear
 #
 
 printf "\n" 
-printf "copy any modules into puppet\n"
+printf "Manage nodes.pp\n"
 printf "\n" 
+
+if [ -e ""$LOCAL_FOLDER"/puppet/manifests/nodes.pp" ]
+then
+   printf "File exists but not in puppet. Copying to puppet\n"
+   printf "\n"
+   cp $LOCAL_FOLDER/puppet/manifests/nodes.pp $PUPPET_FOLDER/manifests/nodes.pp
+else
+   printf "File does not exist. Creating and installing file\n"
+   printf "\n"
+   printf "node \'$MY_FQDN'\' {\n"  > "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
+  printf "   class { \'::ntp\' :\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
+  printf "   servers => [\'0.pool.ntp.org\', \'1.pool.ntp.org\' ] ,\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
+   printf "}\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
+
+   cp $LOCAL_FOLDER/puppet/manifests/nodes.pp $PUPPET_FOLDER/manifests/nodes.pp
+fi
 
 printf "\n"
 read -p "### Press [Enter] key to continue ###"
 clear
+
+#############
+#
+
+printf "\n" 
+printf "install public modeles\n"
+printf "\n" 
+
+#uninstall chrony and replace it with ntp
+sudo systemctl stop chronyd
+sudo yum remove chrony
+sudo puppet module install --target-dir "$PUPPET_FOLDER"/modules puppetlabs-ntp
+
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
+
+#############
+#
+
+printf "\n" 
+printf "apply puppet to this system\n"
+printf "look for errors!\n"
+printf "\n" 
+
+sudo puppet apply "$PUPPET_FOLDER"/manifests/site.pp --modulepath="$PUPPET_FOLDER"/modules 
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
+
+############################ EOF ###############################
