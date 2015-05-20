@@ -24,7 +24,6 @@ clear
 #
 #############
 #
-clear
 printf "\n"
 printf "Modify Puppet config file\n"
 printf "\n"
@@ -58,15 +57,17 @@ clear
 #############
 #
 
-
-
-
 # manage hiera here
-#printf "\n" 
-#printf "copy (if exist) or create site.pp\n"
-#printf "\n" 
+printf "\n" 
+printf "Configuring hiera\n"
+printf "\n" 
 
-#if [ -e ""$LOCAL_FOLDER"/puppet/manifests/site.pp" ]
+sudo mkdir -p             "$PUPPET_ROOT"/hieradata
+sudo chown -R root:puppet "$PUPPET_ROOT"/hieradata
+sudo chmod -R 770         "$PUPPET_ROOT"/hieradata
+sudo chmod -R g+s         "$PUPPET_ROOT"/hieradata
+
+#if [ ! -e ""$PUPPET_ROOT"/" ]
 #then
 #   printf "File exists but not in puppet. Copying to puppet\n"
 #   printf "\n"
