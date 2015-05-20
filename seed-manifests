@@ -24,6 +24,39 @@ source ./bootstrap.cfg
 #
 #############
 #
+clear
+printf "\n"
+printf "Modify Puppet config file\n"
+printf "\n"
+printf "Set the environmentpath\n"
+printf "\n"
+
+# puppet wants the following line in puppet.conf
+# environmentpath = $confdir/environments
+# It should be in [main]
+
+# We will add three lines from bottom to top
+#
+# #Puppets Environment Path
+# environmentpath = $confdir/environments
+# {a blank line}
+
+if  ! grep -q 'environmentpath' "$PUPPET_ROOT"/puppet.conf"" 
+then
+   printf "Modifing puppet.conf\n"
+   printf "\n"
+   sudo sed -i 's/\[main\]/&\n /' "$PUPPET_ROOT"/puppet.conf
+   sudo sed -i 's/\[main\]/&\n    environmentpath = $confdir\/environments/' "$PUPPET_ROOT"/puppet.conf
+   sudo sed -i 's/\[main\]/&\n    \# Puppet Environment Path /' "$PUPPET_ROOT"/puppet.conf
+   sudo sed -i 's/\[main\]/&\n /' "$PUPPET_ROOT"/puppet.conf
+fi
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
+
+#############
+#
 printf "\n" 
 printf "copy (if exist) or create site.pp\n"
 printf "\n" 
@@ -57,12 +90,13 @@ then
    printf "\n"
    cp $LOCAL_FOLDER/puppet/manifests/nodes.pp $PUPPET_FOLDER/manifests/nodes.pp
 else
-   printf "File does not exist. Creating and installing file\n"
-   printf "\n"
-   printf "node \'$MY_FQDN'\' {\n"  > "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
+  printf "File does not exist. Creating and installing file\n"
+  printf "\n"
+  printf "node \'$MY_FQDN\' {\n"  > "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
   printf "   class { \'::ntp\' :\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
   printf "   servers => [\'0.pool.ntp.org\', \'1.pool.ntp.org\' ] ,\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
-   printf "}\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
+  printf "   }\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
+  printf "}\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
 
    cp $LOCAL_FOLDER/puppet/manifests/nodes.pp $PUPPET_FOLDER/manifests/nodes.pp
 fi
@@ -96,7 +130,28 @@ printf "apply puppet to this system\n"
 printf "look for errors!\n"
 printf "\n" 
 
-sudo puppet apply "$PUPPET_FOLDER"/manifests/site.pp --modulepath="$PUPPET_FOLDER"/modules 
+if [ ! -e "$LOCAL_FOLDER"/papply ]
+then
+
+   #$PUPPET_APPLY="$MANIFEST_DIR/site.pp --modulepath=$MODULE_DIR $*"
+   printf "#\!/bin/bash\n"         >  "$LOCAL_FOLDER"/papply
+   printf "\n"                     >> "$LOCAL_FOLDER"/papply
+   printf "puppet apply "          >> "$LOCAL_FOLDER"/papply
+   printf "$MANIFEST_DIR/site.pp"  >> "$LOCAL_FOLDER"/papply
+   printf ' --modulepath='         >> "$LOCAL_FOLDER"/papply
+   printf "$MODULE_DIR"            >> "$LOCAL_FOLDER"/papply
+   printf ' $*'                    >> "$LOCAL_FOLDER"/papply
+   printf "\n"                     >> "$LOCAL_FOLDER"/papply
+fi
+
+if [ ! -e $PUPPET_APPLY_DIR/papply ]
+then
+   sudo cp "$LOCAL_FOLDER/papply" "$PUPPET_APPLY_DIR"
+   sudo chown root:puppet "$PUPPET_APPLY_DIR/papply"
+   sudo chmod 770 "$PUPPET_APPLY_DIR/papply"
+fi
+
+#sudo puppet apply "$PUPPET_FOLDER"/manifests/site.pp --modulepath="$PUPPET_FOLDER"/modules 
 
 printf "\n"
 read -p "### Press [Enter] key to continue ###"
