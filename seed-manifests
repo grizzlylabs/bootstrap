@@ -1,4 +1,12 @@
 #!/bin/bash
+#############
+#
+# Get any variables
+#
+# Inspect bootstrap.cfg before you execute this script
+#
+source ./bootstrap.cfg
+#
 ############## seed.manifests
 #
 clear
@@ -13,14 +21,6 @@ printf "\n"
 read -p "### Press [Enter] key to continue ###"
 clear
 
-#
-#############
-#
-# Get any variables
-#
-# Inspect bootstrap.cfg before you execute this script
-#
-source ./bootstrap.cfg
 #
 #############
 #
@@ -57,48 +57,54 @@ clear
 
 #############
 #
-printf "\n" 
-printf "copy (if exist) or create site.pp\n"
-printf "\n" 
 
-if [ -e ""$LOCAL_FOLDER"/puppet/manifests/site.pp" ]
-then
-   printf "File exists but not in puppet. Copying to puppet\n"
-   printf "\n"
-   cp $LOCAL_FOLDER/puppet/manifests/site.pp "$MANIFEST_DIR"
-else
-   printf "File does not exist. Creating and installing file\n"
-   printf "\n"
-   printf "import \'nodes.pp\'\n" > $LOCAL_FOLDER/puppet/manifests/site.pp
-   cp $LOCAL_FOLDER/puppet/manifests/site.pp "$MANIFEST_DIR"
-fi
 
-printf "\n"
-read -p "### Press [Enter] key to continue ###"
-clear
+
+
+# manage hiera here
+#printf "\n" 
+#printf "copy (if exist) or create site.pp\n"
+#printf "\n" 
+
+#if [ -e ""$LOCAL_FOLDER"/puppet/manifests/site.pp" ]
+#then
+#   printf "File exists but not in puppet. Copying to puppet\n"
+#   printf "\n"
+#   cp $LOCAL_FOLDER/puppet/manifests/site.pp "$MANIFEST_DIR"
+#else
+#   printf "File does not exist. Creating and installing file\n"
+#   printf "\n"
+#   printf "import \'nodes.pp\'\n" > $LOCAL_FOLDER/puppet/manifests/site.pp
+#   cp $LOCAL_FOLDER/puppet/manifests/site.pp "$MANIFEST_DIR"
+#fi
+
+#printf "\n"
+#read -p "### Press [Enter] key to continue ###"
+#clear
 
 #############
 #
 
 printf "\n" 
-printf "Manage nodes.pp\n"
+printf "Manage node manifest for this server\n"
 printf "\n" 
 
-if [ -e ""$LOCAL_FOLDER"/puppet/manifests/nodes.pp" ]
+HOSTpp=""$MANIFEST_DIR"/`hostname`.pp"
+
+if [ -e "$HOSTpp" ]
 then
-   printf "File exists but not in puppet. Copying to puppet\n"
+   printf "File exists \n"
    printf "\n"
-   cp $LOCAL_FOLDER/puppet/manifests/nodes.pp $PUPPET_FOLDER/manifests/nodes.pp
 else
   printf "File does not exist. Creating and installing file\n"
   printf "\n"
-  printf "node \'$MY_FQDN\' {\n"  > "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
-  printf "   class { \'::ntp\' :\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
-  printf "   servers => [\'0.pool.ntp.org\', \'1.pool.ntp.org\' ] ,\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
-  printf "   }\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
-  printf "}\n" >> "$LOCAL_FOLDER"/puppet/manifests/nodes.pp
-
-   cp $LOCAL_FOLDER/puppet/manifests/nodes.pp $PUPPET_FOLDER/manifests/nodes.pp
+  printf "Creating File: "$HOSTpp"\n"
+  printf "\n"
+  printf "node \'$MY_FQDN\' {\n"     > "$HOSTpp"
+  printf "   class { \'::ntp\' :\n" >> "$HOSTpp"
+printf " servers => [\'0.pool.ntp.org\', \'1.pool.ntp.org\' ] ,\n" >> "$HOSTpp"
+  printf "   }\n"                   >> "$HOSTpp"
+  printf "}\n"                      >> "$HOSTpp"
 fi
 
 printf "\n"
