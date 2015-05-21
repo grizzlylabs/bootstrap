@@ -40,13 +40,30 @@ printf "\n"
 # environmentpath = $confdir/environments
 # {a blank line}
 
-if  ! grep -q 'environmentpath' "$PUPPET_ROOT"/puppet.conf"" 
+# Set up Environments
+if  ! grep -q 'environmentpath' "$PUPPET_ROOT"/puppet.conf 
 then
    printf "Modifing puppet.conf\n"
    printf "\n"
    sudo sed -i 's/\[main\]/&\n /' "$PUPPET_ROOT"/puppet.conf
    sudo sed -i 's/\[main\]/&\n    environmentpath = $confdir\/environments/' "$PUPPET_ROOT"/puppet.conf
    sudo sed -i 's/\[main\]/&\n    \# Puppet Environment Path /' "$PUPPET_ROOT"/puppet.conf
+   sudo sed -i 's/\[main\]/&\n /' "$PUPPET_ROOT"/puppet.conf
+fi
+
+printf "Added Environment Path\n"
+
+# make sure puppet can see hiera
+
+if ! grep -q 'hiera_config' "$PUPPET_ROOT"/puppet.conf
+then
+   printf "No heira_config -- Making it\n"
+   printf "\n"
+   printf "hiera_config = /etc/hiera.yaml\n"
+   printf "\n"
+   sudo sed -i 's/\[main\]/&\n /' "$PUPPET_ROOT"/puppet.conf
+   sudo sed -i 's/\[main\]/&\n    hiera_config = \/etc\/hiera.yaml/' "$PUPPET_ROOT"/puppet.conf
+   sudo sed -i 's/\[main\]/&\n    \# Hiera Path/' "$PUPPET_ROOT"/puppet.conf
    sudo sed -i 's/\[main\]/&\n /' "$PUPPET_ROOT"/puppet.conf
 fi
 
@@ -62,22 +79,59 @@ printf "\n"
 printf "Configuring hiera\n"
 printf "\n" 
 
+# creating the hiera data directorys
 sudo mkdir -p             "$PUPPET_ROOT"/hieradata
+sudo mkdir -p             "$PUPPET_ROOT"/hieradata/nodes
+sudo mkdir -p             "$PUPPET_ROOT"/hieradata/roles
+sudo mkdir -p             "$PUPPET_ROOT"/hieradata/secrets
+sudo mkdir -p             "$PUPPET_ROOT"/hieradata/common 
+
 sudo chown -R root:puppet "$PUPPET_ROOT"/hieradata
 sudo chmod -R 770         "$PUPPET_ROOT"/hieradata
 sudo chmod -R g+s         "$PUPPET_ROOT"/hieradata
 
-#if [ ! -e ""$PUPPET_ROOT"/" ]
-#then
-#   printf "File exists but not in puppet. Copying to puppet\n"
-#   printf "\n"
-#   cp $LOCAL_FOLDER/puppet/manifests/site.pp "$MANIFEST_DIR"
-#else
-#   printf "File does not exist. Creating and installing file\n"
-#   printf "\n"
-#   printf "import \'nodes.pp\'\n" > $LOCAL_FOLDER/puppet/manifests/site.pp
-#   cp $LOCAL_FOLDER/puppet/manifests/site.pp "$MANIFEST_DIR"
-#fi
+if [ ! -L ""$PUPPET_ROOT"/hiera.yaml" ]
+then
+   printf "Link to /etc/hiera.yaml does not exist. Linking now\n"
+   printf "\n"
+   sudo ln -s /etc/hiera.yaml "$PUPPET_ROOT"/hiera.yaml
+else
+   printf "That is good link to hiera.yaml exists\n"
+fi
+
+# manage hiera.yaml 
+
+if ! grep -q ":datadir: "$PUPPET_ROOT"/hieradata" /etc/hiera.yaml 
+then
+   printf "There is no data path for Hiera... Re-writing hiera.yaml\n"
+   printf "\n"
+
+  YAML_CFG="/etc/hiera.yaml"
+  HIERA_DIR=":datadir: "$PUPPET_ROOT"/hieradata"
+
+  sudo echo -e '---'                   | sudo tee     "$YAML_CFG" > /dev/null
+  sudo echo -e ':backend:'             | sudo tee  -a "$YAML_CFG" > /dev/null
+  sudo echo -e '  - yaml'              | sudo tee  -a "$YAML_CFG" > /dev/null
+  sudo echo -e ':hierarchy:'           | sudo tee  -a "$YAML_CFG" > /dev/null
+  sudo echo -e '  - "nodes/%{::fqnd}"' | sudo tee  -a "$YAML_CFG" > /dev/null
+  sudo echo -e '  - "roles/*"'         | sudo tee  -a "$YAML_CFG" > /dev/null
+  sudo echo -e '  - "secrets/*"'       | sudo tee  -a "$YAML_CFG" > /dev/null
+  sudo echo -e '  - "globals/*"'       | sudo tee  -a "$YAML_CFG" > /dev/null
+  sudo echo -e ':yaml:'                | sudo tee  -a "$YAML_CFG" > /dev/null
+  sudo echo -e " "$HIERA_DIR""         | sudo tee  -a "$YAML_CFG" > /dev/null
+
+fi
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
+
+#############
+#
+
+#printf "\n" 
+#printf "Managing the \n" 
+#printf "\n" 
 
 #printf "\n"
 #read -p "### Press [Enter] key to continue ###"
@@ -122,7 +176,7 @@ printf "\n"
 #uninstall chrony and replace it with ntp
 sudo systemctl stop chronyd
 sudo yum remove chrony
-sudo puppet module install --target-dir "$PUPPET_FOLDER"/modules puppetlabs-ntp
+sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-ntp
 
 
 printf "\n"
@@ -157,8 +211,6 @@ then
    sudo chown root:puppet "$PUPPET_APPLY_DIR/papply"
    sudo chmod 770 "$PUPPET_APPLY_DIR/papply"
 fi
-
-#sudo puppet apply "$PUPPET_FOLDER"/manifests/site.pp --modulepath="$PUPPET_FOLDER"/modules 
 
 printf "\n"
 read -p "### Press [Enter] key to continue ###"
