@@ -1,0 +1,100 @@
+#!/bin/bash
+#############
+#
+# Get any variables
+#
+# Inspect bootstrap.cfg before you execute this script
+#
+source ./bootstrap.cfg
+#
+############## seed.manifests
+#
+clear
+printf "\n"
+printf "This script Installs and Configures Cobbler\n"
+printf "             1. Cobbler creates a PXE boot server\n"
+printf "             2. Establishes DNS\n"
+printf "             3. Establishes DHCP\n"
+printf "             3. Creates a bootstrap network to build a box\n"
+printf "\n"
+printf "\n"
+
+read -p "### Press [Enter] key to continue ###"
+clear
+
+sudo mkdir -p             ""$MODULE_DIR"/cobbler"
+sudo mkdir -p             ""$MODULE_DIR"/cobbler/manifests"
+
+sudo chown -R root:puppet ""$MODULE_DIR"/cobbler"
+sudo chmod -R 770         ""$MODULE_DIR"/cobbler"
+sudo chmod -R g+s         ""$MODULE_DIR"/cobbler"
+
+##############
+
+printf "\n"
+printf "Creating the cobbler module\n"
+printf "\n"
+
+if [ ! -e ""$MODULE_DIR"/cobbler/manifests/init.pp" ]
+then
+   INIT_FILE=""$MODULE_DIR"/cobbler/manifests/init.pp"
+   printf "# Manage Cobbler\n"                     >  "$INIT_FILE"
+   printf "class cobbler {\n"                      >> "$INIT_FILE"
+   printf "   package { 'cobbler':\n"              >> "$INIT_FILE"
+   printf "      ensure => installed,\n"           >> "$INIT_FILE"
+   printf "   }\n"                                 >> "$INIT_FILE"
+   printf "   service { 'cobbler':\n"              >> "$INIT_FILE"
+   printf "      ensure => running,\n"             >> "$INIT_FILE"
+   printf "      enable => true,\n"                >> "$INIT_FILE"
+   printf "      require= > Package['cobbler'],\n" >> "$INIT_FILE"
+   printf "   }\n"                                 >> "$INIT_FILE"
+   printf "}\n"                                    >> "$INIT_FILE"
+fi
+
+read -p "### Press [Enter] key to continue ###"
+clear
+
+#############
+# add the puppet class to the this node (server)
+printf "\n"
+printf "Adding the cobbler class to this node\n"
+printf "\n"
+
+if
+
+read -p "### Press [Enter] key to continue ###"
+#clear
+#############
+# apply puppet which installs clobber 
+#read -p "### Press [Enter] key to continue ###"
+#clear
+#############
+# manage SELinux
+#read -p "### Press [Enter] key to continue ###"
+#clear
+#############
+# manage  cobbler default root password
+#read -p "### Press [Enter] key to continue ###"
+#clear
+#############
+# manage  cobbler default admin password
+#read -p "### Press [Enter] key to continue ###"
+#clear
+#############
+# manage  cobbler  server and next server
+#read -p "### Press [Enter] key to continue ###"
+#clear
+#############
+# manage dhcp 
+#read -p "### Press [Enter] key to continue ###"
+#clear
+#############
+#  test clobber install
+#read -p "### Press [Enter] key to continue ###"
+#clear
+#############
+# import CentOS 7 
+#read -p "### Press [Enter] key to continue ###"
+#clear
+
+#### EOF
