@@ -1,0 +1,3 @@
+#\!/bin/bash
+
+sudo puppet apply /var/local/puppet/environments/production/manifests --modulepath=/var/local/puppet/environments/production/modules $*

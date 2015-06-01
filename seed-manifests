@@ -126,16 +126,6 @@ printf "\n"
 read -p "### Press [Enter] key to continue ###"
 clear
 
-#############
-#
-
-#printf "\n" 
-#printf "Managing the \n" 
-#printf "\n" 
-
-#printf "\n"
-#read -p "### Press [Enter] key to continue ###"
-#clear
 
 #############
 #
@@ -180,39 +170,6 @@ sudo systemctl stop chronyd
 sudo yum remove chrony
 sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-ntp
 
-
-printf "\n"
-read -p "### Press [Enter] key to continue ###"
-clear
-
-#############
-#
-
-printf "\n" 
-printf "apply puppet to this system\n"
-printf "look for errors!\n"
-printf "\n" 
-
-if [ ! -e "$LOCAL_FOLDER"/papply ]
-then
-
-   #$PUPPET_APPLY="$MANIFEST_DIR/site.pp --modulepath=$MODULE_DIR $*"
-   printf "#\!/bin/bash\n"         >  "$LOCAL_FOLDER"/papply
-   printf "\n"                     >> "$LOCAL_FOLDER"/papply
-   printf "puppet apply "          >> "$LOCAL_FOLDER"/papply
-   printf "$MANIFEST_DIR/site.pp"  >> "$LOCAL_FOLDER"/papply
-   printf ' --modulepath='         >> "$LOCAL_FOLDER"/papply
-   printf "$MODULE_DIR"            >> "$LOCAL_FOLDER"/papply
-   printf ' $*'                    >> "$LOCAL_FOLDER"/papply
-   printf "\n"                     >> "$LOCAL_FOLDER"/papply
-fi
-
-if [ ! -e $PUPPET_APPLY_DIR/papply ]
-then
-   sudo cp "$LOCAL_FOLDER/papply" "$PUPPET_APPLY_DIR"
-   sudo chown root:puppet "$PUPPET_APPLY_DIR/papply"
-   sudo chmod 770 "$PUPPET_APPLY_DIR/papply"
-fi
 
 printf "\n"
 read -p "### Press [Enter] key to continue ###"

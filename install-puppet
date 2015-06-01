@@ -19,6 +19,8 @@ source ./bootstrap.cfg
 
 ######################
 
+clear
+
 printf "\n"
 printf "########## Set up local puppet storage ################\n"
 printf "\n"
@@ -131,6 +133,33 @@ printf "\n"
 printf " Running a version command you should not see errors\n"
 puppet --version
 printf "\n"
+
+read -p "Press [Enter] key to continue"
+clear
+
+######################
+#
+printf "\n"
+printf "Creating a Puppet Apply command called papply\n"
+printf "\n"
+
+if [ ! -e "$LOCAL_FOLDER"/papply ]
+then
+
+   #$PUPPET_APPLY="$MANIFEST_DIR/site.pp --modulepath=$MODULE_DIR $*"
+   printf "#\!/bin/bash\n"         >  "$LOCAL_FOLDER"/papply
+   printf "\n"                     >> "$LOCAL_FOLDER"/papply
+   printf "sudo puppet apply "     >> "$LOCAL_FOLDER"/papply
+   printf "$MANIFEST_DIR"          >> "$LOCAL_FOLDER"/papply
+   printf ' --modulepath='         >> "$LOCAL_FOLDER"/papply
+   printf "$MODULE_DIR"            >> "$LOCAL_FOLDER"/papply
+   printf ' $*'                    >> "$LOCAL_FOLDER"/papply
+   printf "\n"                     >> "$LOCAL_FOLDER"/papply
+fi
+
+sudo cp "$LOCAL_FOLDER/papply" "$PUPPET_APPLY_DIR"
+sudo chown root:puppet "$PUPPET_APPLY_DIR/papply"
+sudo chmod 770 "$PUPPET_APPLY_DIR/papply"
 
 read -p "Press [Enter] key to continue"
 clear
