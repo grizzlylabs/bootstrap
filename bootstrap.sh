@@ -18,49 +18,36 @@ source ./bootstrap.cfg
 
 ######################################
 
-clear
+   clear
+   printf "\n"
+   printf "################################\n"
+   printf "##                            ##\n"
+   printf "## Bootstrap a                ##\n"
+   printf "##                            ##\n"
+   printf "## Deployment Server          ##\n"
+   printf "##                            ##\n"
+   printf "## Do these in order          ##\n"
+   printf "## It will not hurt to do     ##\n"
+   printf "## more than once BUT do NOT  ##\n"
+   printf "## skip one!                  ##\n"
+   printf "##                            ##\n"
+   printf "################################\n"
+   printf "\n"
 
-printf "\n"
-printf "################################\n"
-printf "##                            ##\n"
-printf "## Bootstrap a                ##\n"
-printf "##                            ##\n"
-printf "## Deployment Server          ##\n"
-printf "##                            ##\n"
-printf "## Do these in order          ##\n"
-printf "## It will not hurt to do     ##\n"
-printf "## more than once BUT do NOT  ##\n"
-printf "## skip one!                  ##\n"
-printf "##                            ##\n"
-printf "################################\n"
-printf "##                            ##\n"
-printf "## 1) Install GIT             ##\n"
-printf "## 2) Install Puppet          ##\n"
-printf "## 3) EXIT                    ##\n"
-printf "##                            ##\n"
-printf "################################\n"
-printf "\n"
+   echo -n " Install GIT? y/n"
+   read character
 
-#while [ "$yn" != "Yes" ]; do
-# echo "Please enter your Host Name"
-# read hname
-# echo "You have entered $hname, is this correct? (Yes or No)"
-#  read yn
-#done
-#sh runscript.sh
+   if [ "$character" = 'y' ]
+   then
+      ./install-git
+   fi
 
-read  OPTION
-while [ "$OPTION" != "3" ]; do 
-   case $OPTION in
-      1) printf " Installing GIT\n"
-         ./install-git
-         ;;
-      2) printf " Installing Puppet\n"
-         ./install-puppet
-         ;;
-      3) printf " EXIT             \n" 
-         ;;
-   esac
-done
+   echo ' Install Puppet? y/n'
+   read character
+
+   if [ "$character" = 'y' ]
+   then
+      ./install-puppet 
+   fi
 
 printf "\n"

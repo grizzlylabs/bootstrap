@@ -16,7 +16,7 @@ Files
      bootstrap.cfg
      install-git
      install-puppet
-     seed-manifests
+     install-heira 
 
 Process
      README this document
@@ -24,13 +24,9 @@ Process
      Install CentOS 7 to standard
      Modify bootstrap.cfg with your configuration data
         It's important to get that file right before you continue
-     install-git
-        Put a copy of install-git into /usr/local/bin on your new server
-        Execute install-get as your user rather than root
-     install-puppet
-        Execute install-puppet as your user rather than root
-     seed-manifiests
-        Execute seed-manifests as your user rather than root
+     run bootstrap.sh
+        Put a copy of everything into a directory on your new server
+        Execute bootstrap.sh as your user rather than root
 
 References
 

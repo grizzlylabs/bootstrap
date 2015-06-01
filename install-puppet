@@ -104,6 +104,9 @@ if [ -n "$( grep "$HOSTNAME" /etc/hosts )" ]
 then
      sudo sed -i "s/$HOSTNAME/$MY_FQDN/g" /etc/hosts
 
+#####################
+#
+
 elif [ -n "$( grep "$MY_FQDN" /etc/hosts )"]
 then
      HOSTS_LINE="$MY_IP" 
@@ -160,6 +163,30 @@ fi
 sudo cp "$LOCAL_FOLDER/papply" "$PUPPET_APPLY_DIR"
 sudo chown root:puppet "$PUPPET_APPLY_DIR/papply"
 sudo chmod 770 "$PUPPET_APPLY_DIR/papply"
+
+read -p "Press [Enter] key to continue"
+clear
+
+#####################
+#
+printf "\n"
+printf "Modify Puppet config file\n"
+printf "\n"
+printf "Set the environmentpath\n"
+printf "\n"
+
+if  ! grep -q 'environmentpath' "$PUPPET_ROOT"/puppet.conf
+then
+   printf "Modifing puppet.conf\n"
+   printf "\n"
+   sudo sed -i 's/\[main\]/&\n /' "$PUPPET_ROOT"/puppet.conf
+   sudo sed -i 's/\[main\]/&\n    environmentpath = $confdir\/environments/' "$PUPPET_ROOT"/puppet.conf
+   sudo sed -i 's/\[main\]/&\n    \# Puppet Environment Path /' "$PUPPET_ROOT"/puppet.conf
+   sudo sed -i 's/\[main\]/&\n /' "$PUPPET_ROOT"/puppet.conf
+fi
+
+printf "Added Environment Path\n"
+
 
 read -p "Press [Enter] key to continue"
 clear
