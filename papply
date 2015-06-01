@@ -1,3 +1,0 @@
-#\!/bin/bash
-
-puppet apply /var/local/puppet/environments/production/manifests/site.pp --modulepath=/var/local/puppet/environments/production/modules $*

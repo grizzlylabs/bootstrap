@@ -159,6 +159,8 @@ else
   printf "   class { \'::ntp\' :\n" >> "$HOSTpp"
 printf " servers => [\'0.pool.ntp.org\', \'1.pool.ntp.org\' ] ,\n" >> "$HOSTpp"
   printf "   }\n"                   >> "$HOSTpp"
+  printf "   class { \'::cobbler\' :\n" >> "$HOSTpp"
+  printf "   }\n"                   >> "$HOSTpp"
   printf "}\n"                      >> "$HOSTpp"
 fi
 

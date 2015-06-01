@@ -131,6 +131,7 @@ printf "\n"
 printf " Running a version command you should not see errors\n"
 puppet --version
 printf "\n"
+
 read -p "Press [Enter] key to continue"
 clear
 

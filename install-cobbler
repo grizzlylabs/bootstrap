@@ -24,6 +24,7 @@ clear
 
 sudo mkdir -p             ""$MODULE_DIR"/cobbler"
 sudo mkdir -p             ""$MODULE_DIR"/cobbler/manifests"
+sudo mkdir -p             ""$MODULE_DIR"/cobbler/templates"
 
 sudo chown -R root:puppet ""$MODULE_DIR"/cobbler"
 sudo chmod -R 770         ""$MODULE_DIR"/cobbler"
@@ -38,36 +39,51 @@ printf "\n"
 if [ ! -e ""$MODULE_DIR"/cobbler/manifests/init.pp" ]
 then
    INIT_FILE=""$MODULE_DIR"/cobbler/manifests/init.pp"
-   printf "# Manage Cobbler\n"                     >  "$INIT_FILE"
-   printf "class cobbler {\n"                      >> "$INIT_FILE"
-   printf "   package { 'cobbler':\n"              >> "$INIT_FILE"
-   printf "      ensure => installed,\n"           >> "$INIT_FILE"
-   printf "   }\n"                                 >> "$INIT_FILE"
-   printf "   service { 'cobbler':\n"              >> "$INIT_FILE"
-   printf "      ensure => running,\n"             >> "$INIT_FILE"
-   printf "      enable => true,\n"                >> "$INIT_FILE"
-   printf "      require= > Package['cobbler'],\n" >> "$INIT_FILE"
-   printf "   }\n"                                 >> "$INIT_FILE"
-   printf "}\n"                                    >> "$INIT_FILE"
+   printf "# Manage Cobbler\n"                        >  "$INIT_FILE"
+   printf "class cobbler {\n"                         >> "$INIT_FILE"
+   printf "   package { 'cobbler':\n"                 >> "$INIT_FILE"
+   printf "      ensure => installed,\n"              >> "$INIT_FILE"
+   printf "   }\n"                                    >> "$INIT_FILE"
+   printf "   package { 'cobbler-web':\n"             >> "$INIT_FILE"
+   printf "      ensure => installed,\n"              >> "$INIT_FILE"
+   printf "   }\n"                                    >> "$INIT_FILE"
+   printf "   package { 'pykickstart':\n"             >> "$INIT_FILE"
+   printf "      ensure => installed,\n"              >> "$INIT_FILE"
+   printf "   }\n"                                    >> "$INIT_FILE"
+   printf "   package { 'system-config-kickstart':\n" >> "$INIT_FILE"
+   printf "      ensure => installed,\n"              >> "$INIT_FILE"
+   printf "   }\n"                                    >> "$INIT_FILE"
+   printf "   package { 'dhcp':\n"                    >> "$INIT_FILE"
+   printf "      ensure => installed,\n"              >> "$INIT_FILE"
+   printf "   }\n"                                    >> "$INIT_FILE"
+   printf "   package { 'mod_python':\n"              >> "$INIT_FILE"
+   printf "      ensure => installed,\n"              >> "$INIT_FILE"
+   printf "   }\n"                                    >> "$INIT_FILE"
+   printf "   package { 'wget':\n"                    >> "$INIT_FILE"
+   printf "      ensure => installed,\n"              >> "$INIT_FILE"
+   printf "   }\n"                                    >> "$INIT_FILE"
+   printf "   service { 'cobbler':\n"                 >> "$INIT_FILE"
+   printf "      ensure => 'running',\n"              >> "$INIT_FILE"
+   printf "      enable => 'true',\n"                 >> "$INIT_FILE"
+   printf "      require=> Package['cobbler'],\n"     >> "$INIT_FILE"
+   printf "   }\n"                                    >> "$INIT_FILE"
+   printf "}\n"                                       >> "$INIT_FILE"
 fi
 
 read -p "### Press [Enter] key to continue ###"
 clear
 
 #############
-# add the puppet class to the this node (server)
+# apply puppet which installs clobber 
+
 printf "\n"
-printf "Adding the cobbler class to this node\n"
+printf "Applying the Puppet Config\n"
 printf "\n"
 
-if
+sudo /usr/local/bin/papply
 
 read -p "### Press [Enter] key to continue ###"
-#clear
-#############
-# apply puppet which installs clobber 
-#read -p "### Press [Enter] key to continue ###"
-#clear
+clear
 #############
 # manage SELinux
 #read -p "### Press [Enter] key to continue ###"
