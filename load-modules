@@ -54,6 +54,10 @@ sudo systemctl stop chronyd
 sudo yum remove chrony
 sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-ntp
 ###
+printf "Installing xinet.d from puppetlabs-xinetd\n"
+
+sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-xinetd
+###
 
 printf "\n"
 read -p "### Press [Enter] key to continue ###"
@@ -62,9 +66,27 @@ clear
 ######################
 # Sync my modules into puppet
 
-#printf "\n"
-#read -p "### Press [Enter] key to continue ###"
-#clear
+###
+# Component Modules
+printf "Install wget\n"
+printf "\n"
+rsync -zvhr ./puppet/modules/wget "$MODULE_DIR" 
+###
+# Services
+printf "Install COMMON\n"
+printf "\n"
+rsync -zvhr ./puppet/modules/COMMON "$MODULE_DIR" 
+###
+printf "Install cobbler\n"
+printf "\n"
+rsync -zvhr ./puppet/modules/cobbler "$MODULE_DIR" 
+###
+# Roles
+
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
 
 ######################
 # Run Puppet
