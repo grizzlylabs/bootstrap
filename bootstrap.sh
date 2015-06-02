@@ -34,7 +34,9 @@ source ./bootstrap.cfg
    printf "################################\n"
    printf "\n"
 
-   echo -n " Install GIT? y/n"
+#######
+   echo ' Install GIT? y/n '
+   echo ' '
    read character
 
    if [ "$character" = 'y' ]
@@ -42,12 +44,28 @@ source ./bootstrap.cfg
       ./install-git
    fi
 
-   echo ' Install Puppet? y/n'
+#######
+   clear
+   echo ' '
+   echo ' Install Puppet? y/n '
+   echo ' '
    read character
 
    if [ "$character" = 'y' ]
    then
       ./install-puppet 
+   fi
+
+#######
+   clear
+   echo ' '
+   echo ' Install Hiera? y/n '
+   echo ' '
+   read character
+
+   if [ "$character" = 'y' ]
+   then
+      ./install-hiera 
    fi
 
 printf "\n"

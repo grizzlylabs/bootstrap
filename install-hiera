@@ -1,13 +1,19 @@
 #!/bin/bash
 #############
 #
+# install-hiera
+#
+# Configure install hiera for puppet
+#
+#############
+#
 # Get any variables
 #
 # Inspect bootstrap.cfg before you execute this script
 #
 source ./bootstrap.cfg
-#
-############## seed.manifests
+
+#############
 #
 # make sure puppet can see hiera
 
@@ -82,53 +88,4 @@ printf "\n"
 read -p "### Press [Enter] key to continue ###"
 clear
 
-
-#############
-#
-
-printf "\n" 
-printf "Manage node manifest for this server\n"
-printf "\n" 
-
-HOSTpp=""$MANIFEST_DIR"/`hostname`.pp"
-
-if [ -e "$HOSTpp" ]
-then
-   printf "File exists \n"
-   printf "\n"
-else
-  printf "File does not exist. Creating and installing file\n"
-  printf "\n"
-  printf "Creating File: "$HOSTpp"\n"
-  printf "\n"
-  printf "node \'$MY_FQDN\' {\n"     > "$HOSTpp"
-  printf "   class { \'::ntp\' :\n" >> "$HOSTpp"
-printf " servers => [\'0.pool.ntp.org\', \'1.pool.ntp.org\' ] ,\n" >> "$HOSTpp"
-  printf "   }\n"                   >> "$HOSTpp"
-  printf "   class { \'::cobbler\' :\n" >> "$HOSTpp"
-  printf "   }\n"                   >> "$HOSTpp"
-  printf "}\n"                      >> "$HOSTpp"
-fi
-
-printf "\n"
-read -p "### Press [Enter] key to continue ###"
-clear
-
-#############
-#
-
-printf "\n" 
-printf "install public modeles\n"
-printf "\n" 
-
-#uninstall chrony and replace it with ntp
-sudo systemctl stop chronyd
-sudo yum remove chrony
-sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-ntp
-
-
-printf "\n"
-read -p "### Press [Enter] key to continue ###"
-clear
-
-############################ EOF ###############################
+################### EOF ################################################
