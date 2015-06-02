@@ -68,4 +68,16 @@ source ./bootstrap.cfg
       ./install-hiera 
    fi
 
+#######
+   clear
+   echo ' '
+   echo ' Load Puppet Modules and Manifests? y/n '
+   echo ' '
+   read character
+
+   if [ "$character" = 'y' ]
+   then
+      ./load-modules 
+   fi
+
 printf "\n"

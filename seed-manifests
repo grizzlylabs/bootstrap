@@ -10,36 +10,6 @@ source ./bootstrap.cfg
 ############## seed.manifests
 #
 
-printf "\n" 
-printf "Manage node manifest for this server\n"
-printf "\n" 
-
-HOSTpp=""$MANIFEST_DIR"/`hostname`.pp"
-
-if [ -e "$HOSTpp" ]
-then
-   printf "File exists \n"
-   printf "\n"
-else
-  printf "File does not exist. Creating and installing file\n"
-  printf "\n"
-  printf "Creating File: "$HOSTpp"\n"
-  printf "\n"
-  printf "node \'$MY_FQDN\' {\n"     > "$HOSTpp"
-  printf "   class { \'::ntp\' :\n" >> "$HOSTpp"
-printf " servers => [\'0.pool.ntp.org\', \'1.pool.ntp.org\' ] ,\n" >> "$HOSTpp"
-  printf "   }\n"                   >> "$HOSTpp"
-  printf "   class { \'::cobbler\' :\n" >> "$HOSTpp"
-  printf "   }\n"                   >> "$HOSTpp"
-  printf "}\n"                      >> "$HOSTpp"
-fi
-
-printf "\n"
-read -p "### Press [Enter] key to continue ###"
-clear
-
-#############
-#
 
 printf "\n" 
 printf "install public modeles\n"

@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+######################
+#
+# load-modules  
+#
+# Script to load bootstrap puppet modules     
+#
+# Loads manifest for this system
+# Loads all public modules
+# Loads modules to start up
+#
+# This script installs and configures puppet on centos 7
+#
+# don't run as root or sudo
+#
+######################
+#
+# variables are stored in bootstrap.cfg
+# review those settings before running this script
+
+source ./bootstrap.cfg
+
+######################
+# Manage manifest for this deployment server
+
+clear
+
+printf "\n"
+printf "Manage and Install the Manifest for this deployment server\n"
+printf "\n"
+
+HOSTpp=""$MANIFEST_DIR"/`hostname`.pp"
+
+cp ./YourFQDNhostname.pp "$HOSTpp"
+
+sed -i "s/YourFQDNhostname/$MY_FQDN/g" $HOSTpp
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
+
+######################
+# Install Public Modules
+
+printf "\n"
+printf "Installing Public Puppet Modules\n"
+printf "\n"
+###
+printf "Installing NTP from puppetlabs-ntp\n"
+printf "\n"
+
+sudo systemctl stop chronyd
+sudo yum remove chrony
+sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-ntp
+###
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
+
+######################
+# Sync my modules into puppet
+
+#printf "\n"
+#read -p "### Press [Enter] key to continue ###"
+#clear
+
+######################
+# Run Puppet
+
+sudo /usr/local/bin/papply
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
+
+########################### EOF #######################################
