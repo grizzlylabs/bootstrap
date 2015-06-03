@@ -55,8 +55,14 @@ sudo yum remove chrony
 sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-ntp
 ###
 printf "Installing xinet.d from puppetlabs-xinetd\n"
+printf "\n"
 
 sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-xinetd
+###
+printf "Installing tftp from puppetlabs-xinetd\n"
+printf "\n"
+
+sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-tftp
 ###
 
 printf "\n"
@@ -67,15 +73,17 @@ clear
 # Sync my modules into puppet
 
 ###
-# Component Modules
+printf "Install PROFILE\n"
+printf "\n"
+rsync -zvhr ./puppet/manifests/PROFILE "$MANIFEST_DIR" 
+###
+printf "Install ROLE\n"
+printf "\n"
+rsync -zvhr ./puppet/manifests/ROLE "$MANIFEST_DIR" 
+###
 printf "Install wget\n"
 printf "\n"
 rsync -zvhr ./puppet/modules/wget "$MODULE_DIR" 
-###
-# Services
-printf "Install COMMON\n"
-printf "\n"
-rsync -zvhr ./puppet/modules/COMMON "$MODULE_DIR" 
 ###
 printf "Install cobbler\n"
 printf "\n"

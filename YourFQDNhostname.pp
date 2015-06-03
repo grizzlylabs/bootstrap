@@ -1,15 +1,7 @@
 node 'YourFQDNhostname' {
 
-   include cobbler 
-   include COMMON
+   include wget    
+   include tftp    
+   include xinetd    
 
-   class { '::ntp' :
-   servers => ['0.pool.ntp.org', '1.pool.ntp.org' ] ,
-   }
-#   class { '::wget' :
-#   }
-#   class { '::clobber' :
-#   }
-#   class { '::global' :
-#   }
 }

@@ -50,10 +50,18 @@ then
    sudo mkdir -p ""$PUPPET_ROOT"/environments/development"
 
    sudo mkdir -p ""$PUPPET_ROOT"/environments/production/manifests"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/production/manifests/PROFILE"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/production/manifests/ROLE"
    sudo mkdir -p ""$PUPPET_ROOT"/environments/production/modules"
+
    sudo mkdir -p ""$PUPPET_ROOT"/environments/development/manifests"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/development/manifests/PROFILE"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/development/manifests/ROLE"
    sudo mkdir -p ""$PUPPET_ROOT"/environments/development/modules"
+
    sudo mkdir -p ""$PUPPET_ROOT"/environments/test/manifests"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/test/manifests/PROFILE"
+   sudo mkdir -p ""$PUPPET_ROOT"/environments/test/manifests/ROLE"
    sudo mkdir -p ""$PUPPET_ROOT"/environments/test/modules"
 
    sudo chown -R root:puppet "$PUPPET_ROOT" 
