@@ -75,11 +75,11 @@ clear
 ###
 printf "Install PROFILE\n"
 printf "\n"
-rsync -zvhr ./puppet/manifests/PROFILE "$MANIFEST_DIR" 
+rsync -zvhr ./puppet/modules/PROFILE "$MODULE_DIR" 
 ###
 printf "Install ROLE\n"
 printf "\n"
-rsync -zvhr ./puppet/manifests/ROLE "$MANIFEST_DIR" 
+rsync -zvhr ./puppet/modules/ROLE "$MODULE_DIR" 
 ###
 printf "Install wget\n"
 printf "\n"
