@@ -1,7 +1,8 @@
 node 'YourFQDNhostname' {
 
-   include wget    
-   include tftp    
-   include xinetd    
+   #include ROLE::deployment
+   include PROFILE::base
+   #include tftp    
+   #include xinetd    
 
 }
