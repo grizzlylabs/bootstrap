@@ -64,6 +64,11 @@ printf "\n"
 
 sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-tftp
 ###
+printf "Installing tftp from puppetlabs-xinetd\n"
+printf "\n"
+
+sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-rsync
+###
 
 printf "\n"
 read -p "### Press [Enter] key to continue ###"
@@ -75,11 +80,11 @@ clear
 ###
 printf "Install PROFILE\n"
 printf "\n"
-rsync -zvhr ./puppet/modules/PROFILE "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/profile "$MODULE_DIR" 
 ###
 printf "Install ROLE\n"
 printf "\n"
-rsync -zvhr ./puppet/modules/ROLE "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/role "$MODULE_DIR" 
 ###
 printf "Install wget\n"
 printf "\n"

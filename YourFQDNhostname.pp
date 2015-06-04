@@ -1,7 +1,10 @@
 node 'YourFQDNhostname' {
 
-   #include ROLE::deployment
-   include PROFILE::base
+   #class { '::wget': }
+   #class { '::PROFILE::base': }
+   include role::deployment
+   #include profile::base
+   #include '::wget'
    #include tftp    
    #include xinetd    
 
