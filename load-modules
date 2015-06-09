@@ -40,67 +40,39 @@ printf "\n"
 read -p "### Press [Enter] key to continue ###"
 clear
 
-######################
-# Install Public Modules
-
-printf "\n"
-printf "Installing Public Puppet Modules\n"
-printf "\n"
-###
-printf "Installing NTP from puppetlabs-ntp\n"
-printf "\n"
-
-sudo systemctl stop chronyd
-sudo yum remove chrony
-sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-ntp
-###
-printf "Installing xinet.d from puppetlabs-xinetd\n"
-printf "\n"
-
-sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-xinetd
-###
-printf "Installing tftp from puppetlabs-xinetd\n"
-printf "\n"
-
-sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-tftp
-###
-printf "Installing tftp from puppetlabs-xinetd\n"
-printf "\n"
-
-sudo puppet module install --target-dir "$MODULE_DIR" puppetlabs-rsync
-###
-
-printf "\n"
-read -p "### Press [Enter] key to continue ###"
-clear
 
 ######################
 # Sync my modules into puppet
 
 ###
-printf "Install PROFILE\n"
+printf "Install Modules\n"
 printf "\n"
-rsync -zvhr ./puppet/modules/profile "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/profile     "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/role        "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/module_tool "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/wget        "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/createrepo  "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/cobbler     "$MODULE_DIR" 
 ###
-printf "Install ROLE\n"
-printf "\n"
-rsync -zvhr ./puppet/modules/role "$MODULE_DIR" 
-###
-printf "Install wget\n"
-printf "\n"
-rsync -zvhr ./puppet/modules/wget "$MODULE_DIR" 
-###
-printf "Install cobbler\n"
-printf "\n"
-rsync -zvhr ./puppet/modules/cobbler "$MODULE_DIR" 
-###
-# Roles
-
 
 printf "\n"
 read -p "### Press [Enter] key to continue ###"
 clear
 
+######################
+# Removing Chronyd        
+
+printf "\n"
+printf "Removing Chronyd\n"
+printf "\n"
+###
+
+sudo systemctl stop chronyd
+sudo yum remove chrony
+
+printf "\n"
+read -p "### Press [Enter] key to continue ###"
+clear
 ######################
 # Run Puppet
 
