@@ -47,12 +47,12 @@ clear
 ###
 printf "Install Modules\n"
 printf "\n"
-rsync -zvhr ./puppet/modules/profile     "$MODULE_DIR" 
-rsync -zvhr ./puppet/modules/role        "$MODULE_DIR" 
-rsync -zvhr ./puppet/modules/module_tool "$MODULE_DIR" 
-rsync -zvhr ./puppet/modules/wget        "$MODULE_DIR" 
-rsync -zvhr ./puppet/modules/createrepo  "$MODULE_DIR" 
-rsync -zvhr ./puppet/modules/cobbler     "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/profile       "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/role          "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/module_tool   "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/wget          "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/repo_tools    "$MODULE_DIR" 
+rsync -zvhr ./puppet/modules/cobbler       "$MODULE_DIR" 
 ###
 
 printf "\n"

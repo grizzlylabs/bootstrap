@@ -45,8 +45,8 @@ printf "\n"
 sudo mkdir -p             "$PUPPET_ROOT"/hieradata
 sudo mkdir -p             "$PUPPET_ROOT"/hieradata/nodes
 sudo mkdir -p             "$PUPPET_ROOT"/hieradata/roles
+sudo mkdir -p             "$PUPPET_ROOT"/hieradata/profiles
 sudo mkdir -p             "$PUPPET_ROOT"/hieradata/secrets
-sudo mkdir -p             "$PUPPET_ROOT"/hieradata/common 
 
 sudo chown -R root:puppet "$PUPPET_ROOT"/hieradata
 sudo chmod -R 770         "$PUPPET_ROOT"/hieradata
@@ -71,18 +71,23 @@ then
   YAML_CFG="/etc/hiera.yaml"
   HIERA_DIR=":datadir: "$PUPPET_ROOT"/hieradata"
 
-  sudo echo -e '---'                   | sudo tee     "$YAML_CFG" > /dev/null
-  sudo echo -e ':backend:'             | sudo tee  -a "$YAML_CFG" > /dev/null
-  sudo echo -e '  - yaml'              | sudo tee  -a "$YAML_CFG" > /dev/null
-  sudo echo -e ':hierarchy:'           | sudo tee  -a "$YAML_CFG" > /dev/null
-  sudo echo -e '  - "nodes/%{::fqnd}"' | sudo tee  -a "$YAML_CFG" > /dev/null
-  sudo echo -e '  - "roles/*"'         | sudo tee  -a "$YAML_CFG" > /dev/null
-  sudo echo -e '  - "secrets/*"'       | sudo tee  -a "$YAML_CFG" > /dev/null
-  sudo echo -e '  - "globals/*"'       | sudo tee  -a "$YAML_CFG" > /dev/null
-  sudo echo -e ':yaml:'                | sudo tee  -a "$YAML_CFG" > /dev/null
-  sudo echo -e " "$HIERA_DIR""         | sudo tee  -a "$YAML_CFG" > /dev/null
+  printf "$HIERA_DIR\n"
+
+sudo echo -e '---'                        | sudo tee     "$YAML_CFG" > /dev/null
+sudo echo -e ':backend:'                  | sudo tee  -a "$YAML_CFG" > /dev/null
+sudo echo -e '  - yaml'                   | sudo tee  -a "$YAML_CFG" > /dev/null
+sudo echo -e ':hierarchy:'                | sudo tee  -a "$YAML_CFG" > /dev/null
+sudo echo -e '  - "nodes/%{::fqdn}"'      | sudo tee  -a "$YAML_CFG" > /dev/null
+sudo echo -e '  - "roles/%{::role}"'      | sudo tee  -a "$YAML_CFG" > /dev/null
+sudo echo -e '  - "profiles/%{::profile}"'| sudo tee  -a "$YAML_CFG" > /dev/null
+sudo echo -e '  - "secrets/%{::secret}"'  | sudo tee  -a "$YAML_CFG" > /dev/null
+sudo echo -e '  - "common"'               | sudo tee  -a "$YAML_CFG" > /dev/null
+sudo echo -e ':yaml:'                     | sudo tee  -a "$YAML_CFG" > /dev/null
+sudo echo -e " "$HIERA_DIR""              | sudo tee  -a "$YAML_CFG" > /dev/null
 
 fi
+
+rsync -zvhr ./hieradata "$PUPPET_ROOT"
 
 printf "\n"
 read -p "### Press [Enter] key to continue ###"

@@ -12,6 +12,9 @@ class module_tool::install {
    exec { 'install-puppet-forge-modules-puppetlabs-rsync':
      command => '/usr/bin/puppet module install --target-dir /etc/puppet/environments/production/modules puppetlabs-rsync', 
    }
+   exec { 'install-puppet-forge-modules-puppetlabs-apache':
+     command => '/usr/bin/puppet module install --target-dir /etc/puppet/environments/production/modules puppetlabs-apache', 
+   }
 }
 class module_tool::upgrade {
    exec { 'upgrade-puppet-forge-modules-puppetlabs-ntp':
@@ -26,4 +29,7 @@ class module_tool::upgrade {
    exec { 'upgrade-puppet-forge-modules-puppetlabs-rsync':
      command => '/usr/bin/puppet module upgrade puppetlabs-rsync', 
    }
+   #exec { 'upgrade-puppet-forge-modules-puppetlabs-apache':
+   #  command => '/usr/bin/puppet module upgrade puppetlabs-apache', 
+   #}
 }

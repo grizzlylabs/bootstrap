@@ -1,5 +1,7 @@
 # Base for all Linux Boxen
 class profile::base {
    include ::wget
-   include ::ntp
+   class { '::ntp':
+      servers => hiera("ntp::servers"),
+   }
 }
